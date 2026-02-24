@@ -1,0 +1,39 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Artist {
+  id        String   @id
+  name      String
+  imageUrl  String?
+  genre     String?
+  updatedAt DateTime @updatedAt
+  events    Event[]
+}
+
+model Event {
+  id           String        @id
+  artistId     String
+  artist       Artist        @relation(fields: [artistId], references: [id])
+  name         String
+  venue        String
+  city         String
+  country      String
+  date         DateTime
+  imageUrl     String?
+  ticketUrl    String?
+  cachedAt     DateTime      @default(now())
+  userConcerts UserConcert[]
+}
+
+model UserConcert {
+  id      String   @id @default(cuid())
+  eventId String
+  event   Event    @relation(fields: [eventId], references: [id])
+  addedAt DateTime @default(now())
+}
