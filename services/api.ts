@@ -13,3 +13,8 @@ export const searchConcerts = async (query: string, country = 'ES') => {
   });
   return res.data;
 };
+
+export const getConcertById = async (id: string) => {
+  const res = await api.get(`/api/concerts/${id}`);
+  return res.data;
+};
