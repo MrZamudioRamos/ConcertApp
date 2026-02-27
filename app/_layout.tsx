@@ -2,6 +2,10 @@ import { useEffect } from 'react';
 import { Stack, router, useSegments } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { AuthProvider, useAuth } from '../context/AuthContext';
+import * as Notifications from 'expo-notifications';
+
+// Deshabilitar registro automático de push token en Expo Go
+Notifications.setAutoServerRegistrationEnabledAsync(false);
 
 function RootGuard() {
   const { user, loading } = useAuth();
