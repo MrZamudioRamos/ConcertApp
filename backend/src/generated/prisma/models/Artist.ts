@@ -317,18 +317,6 @@ export type ArtistScalarRelationFilter = {
   isNot?: Prisma.ArtistWhereInput
 }
 
-export type StringFieldUpdateOperationsInput = {
-  set?: string
-}
-
-export type NullableStringFieldUpdateOperationsInput = {
-  set?: string | null
-}
-
-export type DateTimeFieldUpdateOperationsInput = {
-  set?: Date | string
-}
-
 export type ArtistCreateNestedOneWithoutEventsInput = {
   create?: Prisma.XOR<Prisma.ArtistCreateWithoutEventsInput, Prisma.ArtistUncheckedCreateWithoutEventsInput>
   connectOrCreate?: Prisma.ArtistCreateOrConnectWithoutEventsInput

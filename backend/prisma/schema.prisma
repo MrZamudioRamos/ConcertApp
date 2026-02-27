@@ -7,33 +7,55 @@ datasource db {
   provider = "postgresql"
 }
 
+// ==================== USUARIO ====================
+model User {
+  id          String        @id @default(cuid())
+  supabaseId  String        @unique
+  name        String?
+  avatarUrl   String?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  userConcerts UserConcert[]
+}
+
+// ==================== ARTISTA ====================
 model Artist {
   id        String   @id
   name      String
   imageUrl  String?
   genre     String?
   updatedAt DateTime @updatedAt
+
   events    Event[]
 }
 
+// ==================== EVENTO ====================
 model Event {
-  id           String        @id
-  artistId     String
-  artist       Artist        @relation(fields: [artistId], references: [id])
-  name         String
-  venue        String
-  city         String
-  country      String
-  date         DateTime
-  imageUrl     String?
-  ticketUrl    String?
-  cachedAt     DateTime      @default(now())
+  id          String        @id
+  artistId    String
+  artist      Artist        @relation(fields: [artistId], references: [id])
+  name        String
+  venue       String
+  city        String
+  country     String
+  date        DateTime
+  imageUrl    String?
+  ticketUrl   String?
+  cachedAt    DateTime      @default(now())
+
   userConcerts UserConcert[]
 }
 
+// ==================== FAVORITO (junction table) ====================
 model UserConcert {
-  id      String   @id @default(cuid())
-  eventId String
-  event   Event    @relation(fields: [eventId], references: [id])
-  addedAt DateTime @default(now())
+  id        String   @id @default(cuid())
+  userId    String
+  eventId   String
+  addedAt   DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  event     Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, eventId])
 }

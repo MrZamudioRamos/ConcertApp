@@ -1,5 +1,6 @@
 import { Hono } from 'hono';
 import axios from 'axios';
+import { authMiddleware } from '../middleware/auth';
 
 const concerts = new Hono();
 const TM_KEY = process.env.TICKETMASTER_API_KEY;

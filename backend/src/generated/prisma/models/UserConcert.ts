@@ -26,18 +26,21 @@ export type AggregateUserConcert = {
 
 export type UserConcertMinAggregateOutputType = {
   id: string | null
+  userId: string | null
   eventId: string | null
   addedAt: Date | null
 }
 
 export type UserConcertMaxAggregateOutputType = {
   id: string | null
+  userId: string | null
   eventId: string | null
   addedAt: Date | null
 }
 
 export type UserConcertCountAggregateOutputType = {
   id: number
+  userId: number
   eventId: number
   addedAt: number
   _all: number
@@ -46,18 +49,21 @@ export type UserConcertCountAggregateOutputType = {
 
 export type UserConcertMinAggregateInputType = {
   id?: true
+  userId?: true
   eventId?: true
   addedAt?: true
 }
 
 export type UserConcertMaxAggregateInputType = {
   id?: true
+  userId?: true
   eventId?: true
   addedAt?: true
 }
 
 export type UserConcertCountAggregateInputType = {
   id?: true
+  userId?: true
   eventId?: true
   addedAt?: true
   _all?: true
@@ -137,6 +143,7 @@ export type UserConcertGroupByArgs<ExtArgs extends runtime.Types.Extensions.Inte
 
 export type UserConcertGroupByOutputType = {
   id: string
+  userId: string
   eventId: string
   addedAt: Date
   _count: UserConcertCountAggregateOutputType | null
@@ -164,30 +171,38 @@ export type UserConcertWhereInput = {
   OR?: Prisma.UserConcertWhereInput[]
   NOT?: Prisma.UserConcertWhereInput | Prisma.UserConcertWhereInput[]
   id?: Prisma.StringFilter<"UserConcert"> | string
+  userId?: Prisma.StringFilter<"UserConcert"> | string
   eventId?: Prisma.StringFilter<"UserConcert"> | string
   addedAt?: Prisma.DateTimeFilter<"UserConcert"> | Date | string
+  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   event?: Prisma.XOR<Prisma.EventScalarRelationFilter, Prisma.EventWhereInput>
 }
 
 export type UserConcertOrderByWithRelationInput = {
   id?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
   eventId?: Prisma.SortOrder
   addedAt?: Prisma.SortOrder
+  user?: Prisma.UserOrderByWithRelationInput
   event?: Prisma.EventOrderByWithRelationInput
 }
 
 export type UserConcertWhereUniqueInput = Prisma.AtLeast<{
   id?: string
+  userId_eventId?: Prisma.UserConcertUserIdEventIdCompoundUniqueInput
   AND?: Prisma.UserConcertWhereInput | Prisma.UserConcertWhereInput[]
   OR?: Prisma.UserConcertWhereInput[]
   NOT?: Prisma.UserConcertWhereInput | Prisma.UserConcertWhereInput[]
+  userId?: Prisma.StringFilter<"UserConcert"> | string
   eventId?: Prisma.StringFilter<"UserConcert"> | string
   addedAt?: Prisma.DateTimeFilter<"UserConcert"> | Date | string
+  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   event?: Prisma.XOR<Prisma.EventScalarRelationFilter, Prisma.EventWhereInput>
-}, "id">
+}, "id" | "userId_eventId">
 
 export type UserConcertOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
   eventId?: Prisma.SortOrder
   addedAt?: Prisma.SortOrder
   _count?: Prisma.UserConcertCountOrderByAggregateInput
@@ -200,6 +215,7 @@ export type UserConcertScalarWhereWithAggregatesInput = {
   OR?: Prisma.UserConcertScalarWhereWithAggregatesInput[]
   NOT?: Prisma.UserConcertScalarWhereWithAggregatesInput | Prisma.UserConcertScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"UserConcert"> | string
+  userId?: Prisma.StringWithAggregatesFilter<"UserConcert"> | string
   eventId?: Prisma.StringWithAggregatesFilter<"UserConcert"> | string
   addedAt?: Prisma.DateTimeWithAggregatesFilter<"UserConcert"> | Date | string
 }
@@ -207,11 +223,13 @@ export type UserConcertScalarWhereWithAggregatesInput = {
 export type UserConcertCreateInput = {
   id?: string
   addedAt?: Date | string
+  user: Prisma.UserCreateNestedOneWithoutUserConcertsInput
   event: Prisma.EventCreateNestedOneWithoutUserConcertsInput
 }
 
 export type UserConcertUncheckedCreateInput = {
   id?: string
+  userId: string
   eventId: string
   addedAt?: Date | string
 }
@@ -219,17 +237,20 @@ export type UserConcertUncheckedCreateInput = {
 export type UserConcertUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   addedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneRequiredWithoutUserConcertsNestedInput
   event?: Prisma.EventUpdateOneRequiredWithoutUserConcertsNestedInput
 }
 
 export type UserConcertUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
   eventId?: Prisma.StringFieldUpdateOperationsInput | string
   addedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type UserConcertCreateManyInput = {
   id?: string
+  userId: string
   eventId: string
   addedAt?: Date | string
 }
@@ -241,6 +262,7 @@ export type UserConcertUpdateManyMutationInput = {
 
 export type UserConcertUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
   eventId?: Prisma.StringFieldUpdateOperationsInput | string
   addedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -255,22 +277,72 @@ export type UserConcertOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
+export type UserConcertUserIdEventIdCompoundUniqueInput = {
+  userId: string
+  eventId: string
+}
+
 export type UserConcertCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
   eventId?: Prisma.SortOrder
   addedAt?: Prisma.SortOrder
 }
 
 export type UserConcertMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
   eventId?: Prisma.SortOrder
   addedAt?: Prisma.SortOrder
 }
 
 export type UserConcertMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
   eventId?: Prisma.SortOrder
   addedAt?: Prisma.SortOrder
+}
+
+export type UserConcertCreateNestedManyWithoutUserInput = {
+  create?: Prisma.XOR<Prisma.UserConcertCreateWithoutUserInput, Prisma.UserConcertUncheckedCreateWithoutUserInput> | Prisma.UserConcertCreateWithoutUserInput[] | Prisma.UserConcertUncheckedCreateWithoutUserInput[]
+  connectOrCreate?: Prisma.UserConcertCreateOrConnectWithoutUserInput | Prisma.UserConcertCreateOrConnectWithoutUserInput[]
+  createMany?: Prisma.UserConcertCreateManyUserInputEnvelope
+  connect?: Prisma.UserConcertWhereUniqueInput | Prisma.UserConcertWhereUniqueInput[]
+}
+
+export type UserConcertUncheckedCreateNestedManyWithoutUserInput = {
+  create?: Prisma.XOR<Prisma.UserConcertCreateWithoutUserInput, Prisma.UserConcertUncheckedCreateWithoutUserInput> | Prisma.UserConcertCreateWithoutUserInput[] | Prisma.UserConcertUncheckedCreateWithoutUserInput[]
+  connectOrCreate?: Prisma.UserConcertCreateOrConnectWithoutUserInput | Prisma.UserConcertCreateOrConnectWithoutUserInput[]
+  createMany?: Prisma.UserConcertCreateManyUserInputEnvelope
+  connect?: Prisma.UserConcertWhereUniqueInput | Prisma.UserConcertWhereUniqueInput[]
+}
+
+export type UserConcertUpdateManyWithoutUserNestedInput = {
+  create?: Prisma.XOR<Prisma.UserConcertCreateWithoutUserInput, Prisma.UserConcertUncheckedCreateWithoutUserInput> | Prisma.UserConcertCreateWithoutUserInput[] | Prisma.UserConcertUncheckedCreateWithoutUserInput[]
+  connectOrCreate?: Prisma.UserConcertCreateOrConnectWithoutUserInput | Prisma.UserConcertCreateOrConnectWithoutUserInput[]
+  upsert?: Prisma.UserConcertUpsertWithWhereUniqueWithoutUserInput | Prisma.UserConcertUpsertWithWhereUniqueWithoutUserInput[]
+  createMany?: Prisma.UserConcertCreateManyUserInputEnvelope
+  set?: Prisma.UserConcertWhereUniqueInput | Prisma.UserConcertWhereUniqueInput[]
+  disconnect?: Prisma.UserConcertWhereUniqueInput | Prisma.UserConcertWhereUniqueInput[]
+  delete?: Prisma.UserConcertWhereUniqueInput | Prisma.UserConcertWhereUniqueInput[]
+  connect?: Prisma.UserConcertWhereUniqueInput | Prisma.UserConcertWhereUniqueInput[]
+  update?: Prisma.UserConcertUpdateWithWhereUniqueWithoutUserInput | Prisma.UserConcertUpdateWithWhereUniqueWithoutUserInput[]
+  updateMany?: Prisma.UserConcertUpdateManyWithWhereWithoutUserInput | Prisma.UserConcertUpdateManyWithWhereWithoutUserInput[]
+  deleteMany?: Prisma.UserConcertScalarWhereInput | Prisma.UserConcertScalarWhereInput[]
+}
+
+export type UserConcertUncheckedUpdateManyWithoutUserNestedInput = {
+  create?: Prisma.XOR<Prisma.UserConcertCreateWithoutUserInput, Prisma.UserConcertUncheckedCreateWithoutUserInput> | Prisma.UserConcertCreateWithoutUserInput[] | Prisma.UserConcertUncheckedCreateWithoutUserInput[]
+  connectOrCreate?: Prisma.UserConcertCreateOrConnectWithoutUserInput | Prisma.UserConcertCreateOrConnectWithoutUserInput[]
+  upsert?: Prisma.UserConcertUpsertWithWhereUniqueWithoutUserInput | Prisma.UserConcertUpsertWithWhereUniqueWithoutUserInput[]
+  createMany?: Prisma.UserConcertCreateManyUserInputEnvelope
+  set?: Prisma.UserConcertWhereUniqueInput | Prisma.UserConcertWhereUniqueInput[]
+  disconnect?: Prisma.UserConcertWhereUniqueInput | Prisma.UserConcertWhereUniqueInput[]
+  delete?: Prisma.UserConcertWhereUniqueInput | Prisma.UserConcertWhereUniqueInput[]
+  connect?: Prisma.UserConcertWhereUniqueInput | Prisma.UserConcertWhereUniqueInput[]
+  update?: Prisma.UserConcertUpdateWithWhereUniqueWithoutUserInput | Prisma.UserConcertUpdateWithWhereUniqueWithoutUserInput[]
+  updateMany?: Prisma.UserConcertUpdateManyWithWhereWithoutUserInput | Prisma.UserConcertUpdateManyWithWhereWithoutUserInput[]
+  deleteMany?: Prisma.UserConcertScalarWhereInput | Prisma.UserConcertScalarWhereInput[]
 }
 
 export type UserConcertCreateNestedManyWithoutEventInput = {
@@ -315,13 +387,63 @@ export type UserConcertUncheckedUpdateManyWithoutEventNestedInput = {
   deleteMany?: Prisma.UserConcertScalarWhereInput | Prisma.UserConcertScalarWhereInput[]
 }
 
+export type UserConcertCreateWithoutUserInput = {
+  id?: string
+  addedAt?: Date | string
+  event: Prisma.EventCreateNestedOneWithoutUserConcertsInput
+}
+
+export type UserConcertUncheckedCreateWithoutUserInput = {
+  id?: string
+  eventId: string
+  addedAt?: Date | string
+}
+
+export type UserConcertCreateOrConnectWithoutUserInput = {
+  where: Prisma.UserConcertWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserConcertCreateWithoutUserInput, Prisma.UserConcertUncheckedCreateWithoutUserInput>
+}
+
+export type UserConcertCreateManyUserInputEnvelope = {
+  data: Prisma.UserConcertCreateManyUserInput | Prisma.UserConcertCreateManyUserInput[]
+  skipDuplicates?: boolean
+}
+
+export type UserConcertUpsertWithWhereUniqueWithoutUserInput = {
+  where: Prisma.UserConcertWhereUniqueInput
+  update: Prisma.XOR<Prisma.UserConcertUpdateWithoutUserInput, Prisma.UserConcertUncheckedUpdateWithoutUserInput>
+  create: Prisma.XOR<Prisma.UserConcertCreateWithoutUserInput, Prisma.UserConcertUncheckedCreateWithoutUserInput>
+}
+
+export type UserConcertUpdateWithWhereUniqueWithoutUserInput = {
+  where: Prisma.UserConcertWhereUniqueInput
+  data: Prisma.XOR<Prisma.UserConcertUpdateWithoutUserInput, Prisma.UserConcertUncheckedUpdateWithoutUserInput>
+}
+
+export type UserConcertUpdateManyWithWhereWithoutUserInput = {
+  where: Prisma.UserConcertScalarWhereInput
+  data: Prisma.XOR<Prisma.UserConcertUpdateManyMutationInput, Prisma.UserConcertUncheckedUpdateManyWithoutUserInput>
+}
+
+export type UserConcertScalarWhereInput = {
+  AND?: Prisma.UserConcertScalarWhereInput | Prisma.UserConcertScalarWhereInput[]
+  OR?: Prisma.UserConcertScalarWhereInput[]
+  NOT?: Prisma.UserConcertScalarWhereInput | Prisma.UserConcertScalarWhereInput[]
+  id?: Prisma.StringFilter<"UserConcert"> | string
+  userId?: Prisma.StringFilter<"UserConcert"> | string
+  eventId?: Prisma.StringFilter<"UserConcert"> | string
+  addedAt?: Prisma.DateTimeFilter<"UserConcert"> | Date | string
+}
+
 export type UserConcertCreateWithoutEventInput = {
   id?: string
   addedAt?: Date | string
+  user: Prisma.UserCreateNestedOneWithoutUserConcertsInput
 }
 
 export type UserConcertUncheckedCreateWithoutEventInput = {
   id?: string
+  userId: string
   addedAt?: Date | string
 }
 
@@ -351,32 +473,51 @@ export type UserConcertUpdateManyWithWhereWithoutEventInput = {
   data: Prisma.XOR<Prisma.UserConcertUpdateManyMutationInput, Prisma.UserConcertUncheckedUpdateManyWithoutEventInput>
 }
 
-export type UserConcertScalarWhereInput = {
-  AND?: Prisma.UserConcertScalarWhereInput | Prisma.UserConcertScalarWhereInput[]
-  OR?: Prisma.UserConcertScalarWhereInput[]
-  NOT?: Prisma.UserConcertScalarWhereInput | Prisma.UserConcertScalarWhereInput[]
-  id?: Prisma.StringFilter<"UserConcert"> | string
-  eventId?: Prisma.StringFilter<"UserConcert"> | string
-  addedAt?: Prisma.DateTimeFilter<"UserConcert"> | Date | string
+export type UserConcertCreateManyUserInput = {
+  id?: string
+  eventId: string
+  addedAt?: Date | string
+}
+
+export type UserConcertUpdateWithoutUserInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  addedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  event?: Prisma.EventUpdateOneRequiredWithoutUserConcertsNestedInput
+}
+
+export type UserConcertUncheckedUpdateWithoutUserInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  eventId?: Prisma.StringFieldUpdateOperationsInput | string
+  addedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type UserConcertUncheckedUpdateManyWithoutUserInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  eventId?: Prisma.StringFieldUpdateOperationsInput | string
+  addedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type UserConcertCreateManyEventInput = {
   id?: string
+  userId: string
   addedAt?: Date | string
 }
 
 export type UserConcertUpdateWithoutEventInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   addedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneRequiredWithoutUserConcertsNestedInput
 }
 
 export type UserConcertUncheckedUpdateWithoutEventInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
   addedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type UserConcertUncheckedUpdateManyWithoutEventInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
   addedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -384,49 +525,61 @@ export type UserConcertUncheckedUpdateManyWithoutEventInput = {
 
 export type UserConcertSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  userId?: boolean
   eventId?: boolean
   addedAt?: boolean
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   event?: boolean | Prisma.EventDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["userConcert"]>
 
 export type UserConcertSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  userId?: boolean
   eventId?: boolean
   addedAt?: boolean
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   event?: boolean | Prisma.EventDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["userConcert"]>
 
 export type UserConcertSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  userId?: boolean
   eventId?: boolean
   addedAt?: boolean
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   event?: boolean | Prisma.EventDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["userConcert"]>
 
 export type UserConcertSelectScalar = {
   id?: boolean
+  userId?: boolean
   eventId?: boolean
   addedAt?: boolean
 }
 
-export type UserConcertOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "eventId" | "addedAt", ExtArgs["result"]["userConcert"]>
+export type UserConcertOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "eventId" | "addedAt", ExtArgs["result"]["userConcert"]>
 export type UserConcertInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   event?: boolean | Prisma.EventDefaultArgs<ExtArgs>
 }
 export type UserConcertIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   event?: boolean | Prisma.EventDefaultArgs<ExtArgs>
 }
 export type UserConcertIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   event?: boolean | Prisma.EventDefaultArgs<ExtArgs>
 }
 
 export type $UserConcertPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "UserConcert"
   objects: {
+    user: Prisma.$UserPayload<ExtArgs>
     event: Prisma.$EventPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
+    userId: string
     eventId: string
     addedAt: Date
   }, ExtArgs["result"]["userConcert"]>
@@ -823,6 +976,7 @@ readonly fields: UserConcertFieldRefs;
  */
 export interface Prisma__UserConcertClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   event<T extends Prisma.EventDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.EventDefaultArgs<ExtArgs>>): Prisma.Prisma__EventClient<runtime.Types.Result.GetResult<Prisma.$EventPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -854,6 +1008,7 @@ export interface Prisma__UserConcertClient<T, Null = never, ExtArgs extends runt
  */
 export interface UserConcertFieldRefs {
   readonly id: Prisma.FieldRef<"UserConcert", 'String'>
+  readonly userId: Prisma.FieldRef<"UserConcert", 'String'>
   readonly eventId: Prisma.FieldRef<"UserConcert", 'String'>
   readonly addedAt: Prisma.FieldRef<"UserConcert", 'DateTime'>
 }
