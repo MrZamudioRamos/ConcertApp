@@ -6,17 +6,41 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { getConcertById } from '../../services/api';
+import { useAuth } from '../../context/AuthContext';
+import { supabase } from '../../services/supabase';
 
 export default function ConciertoDetalle() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const [concert, setConcert] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const { user } = useAuth();
+  const [saved, setSaved] = useState(false);
+  const [saving, setSaving] = useState(false);
+
 
   useEffect(() => {
     getConcertById(id)
-      .then(data => { setConcert(data); setLoading(false); })
-      .catch(() => { setError(true); setLoading(false); });
+      .then(async (data) => {
+        setConcert(data);
+        setLoading(false);
+
+        // Comprobar si ya está guardado
+        if (user) {
+          const { data: existing } = await supabase
+            .from("saved_concerts")
+            .select("id")
+            .eq("user_id", user.id)
+            .eq("tm_id", id)
+            .single();
+          if (existing) setSaved(true);
+        }
+      })
+
+      .catch(() => {
+        setError(true);
+        setLoading(false);
+      });
   }, [id]);
 
   if (loading) return (
@@ -46,15 +70,35 @@ export default function ConciertoDetalle() {
   const genre    = concert.genre;
   const segment  = concert.segment;
 
+  const handleSave = async () => {
+    if (!user || saving) return;
+    setSaving(true);
+
+    const { error } = await supabase.from("saved_concerts").insert({
+      user_id: user.id,
+      tm_id: concert.id,
+      name: concert.name,
+      date: concert.date,
+      venue: concert.venue,
+      city: concert.city,
+      image_url: concert.imageUrl,
+      ticket_url: concert.ticketUrl,
+    });
+
+    setSaving(false);
+    if (!error) setSaved(true);
+  };
+
+
   return (
     <ScrollView style={styles.container} bounces={false}>
-
       {/* Hero */}
       <View style={styles.heroContainer}>
-        {imageUrl
-          ? <Image source={{ uri: imageUrl }} style={styles.heroImage} />
-          : <View style={[styles.heroImage, styles.heroPlaceholder]} />
-        }
+        {imageUrl ? (
+          <Image source={{ uri: imageUrl }} style={styles.heroImage} />
+        ) : (
+          <View style={[styles.heroImage, styles.heroPlaceholder]} />
+        )}
         <View style={styles.heroGradient} />
         <Pressable style={styles.backButton} onPress={() => router.back()}>
           <Ionicons name="chevron-back" size={28} color="#fff" />
@@ -63,11 +107,10 @@ export default function ConciertoDetalle() {
 
       {/* Contenido */}
       <View style={styles.content}>
-
         {/* Género */}
         {(segment || genre) && (
           <Text style={styles.genre}>
-            {[segment, genre].filter(Boolean).join(' · ').toUpperCase()}
+            {[segment, genre].filter(Boolean).join(" · ").toUpperCase()}
           </Text>
         )}
 
@@ -78,8 +121,8 @@ export default function ConciertoDetalle() {
         <View style={styles.infoRow}>
           <Ionicons name="calendar-outline" size={18} color="#E4156B" />
           <Text style={styles.infoText}>
-            {date ?? 'Fecha por confirmar'}
-            {time ? `  ·  ${time}h` : ''}
+            {date ?? "Fecha por confirmar"}
+            {time ? `  ·  ${time}h` : ""}
           </Text>
         </View>
 
@@ -88,7 +131,8 @@ export default function ConciertoDetalle() {
           <View style={styles.infoRow}>
             <Ionicons name="location-outline" size={18} color="#E4156B" />
             <Text style={styles.infoText}>
-              {venue}{city ? `, ${city}` : ''}
+              {venue}
+              {city ? `, ${city}` : ""}
             </Text>
           </View>
         )}
@@ -98,7 +142,7 @@ export default function ConciertoDetalle() {
           <View style={styles.infoRow}>
             <Ionicons name="pricetag-outline" size={18} color="#E4156B" />
             <Text style={styles.infoText}>
-              Desde {priceMin}€{priceMax ? `  ·  hasta ${priceMax}€` : ''}
+              Desde {priceMin}€{priceMax ? `  ·  hasta ${priceMax}€` : ""}
             </Text>
           </View>
         )}
@@ -108,17 +152,34 @@ export default function ConciertoDetalle() {
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Artistas</Text>
             {artists.map((a: any) => (
-              <Text key={a.id} style={styles.artistName}>· {a.name}</Text>
+              <Text key={a.id} style={styles.artistName}>
+                · {a.name}
+              </Text>
             ))}
           </View>
         )}
 
         {/* Botón añadir */}
-        <Pressable style={styles.addButton}>
-          <Ionicons name="add-circle-outline" size={22} color="#fff" />
-          <Text style={styles.addButtonText}>Añadir a Mis Conciertos</Text>
+        <Pressable
+          style={[styles.addButton, saved && styles.addButtonSaved]}
+          onPress={handleSave}
+          disabled={saved || saving}
+        >
+          {saving ? (
+            <ActivityIndicator color="#fff" size="small" />
+          ) : (
+            <>
+              <Ionicons
+                name={saved ? "checkmark-circle" : "add-circle-outline"}
+                size={22}
+                color="#fff"
+              />
+              <Text style={styles.addButtonText}>
+                {saved ? "Guardado" : "Añadir a Mis Conciertos"}
+              </Text>
+            </>
+          )}
         </Pressable>
-
       </View>
     </ScrollView>
   );
@@ -151,5 +212,6 @@ const styles = StyleSheet.create({
   addButton:       { flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
                      gap: 8, backgroundColor: '#E4156B',
                      borderRadius: 14, padding: 16, marginTop: 32 },
+  addButtonSaved:  { backgroundColor: '#2a2a2a' },
   addButtonText:   { color: '#fff', fontSize: 16, fontWeight: '700' },
 });
