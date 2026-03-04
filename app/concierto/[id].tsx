@@ -58,15 +58,26 @@ export default function ConciertoDetalle() {
   }, [id]);
 
   const handleSave = async () => {
-    if (!user || saving) return;
+    if (!user || saving || saved) return;
     setSaving(true);
-    const { error } = await supabase.from('saved_concerts').insert({
-      user_id: user.id, tm_id: concert.id, name: concert.name,
-      date: concert.date, venue: concert.venue, city: concert.city,
-      image_url: concert.imageUrl, ticket_url: concert.ticketUrl,
-    });
-    setSaving(false);
-    if (!error) setSaved(true);
+    try {
+      const { error } = await supabase.from("savedconcerts").insert({
+        userid: user.id,
+        tmid: concert.id,
+        name: concert.name,
+        date: concert.date,
+        venue: concert.venue,
+        city: concert.city,
+        imageurl: concert.imageUrl,
+        ticketurl: concert.ticketUrl,
+        savedat: new Date().toISOString(),
+      });
+      if (!error) setSaved(true);
+      else if (error.code === "23505") setSaved(true);
+      else console.error("Error guardando:", error);
+    } finally {
+      setSaving(false);
+    }
   };
 
   const openWaze = () => {

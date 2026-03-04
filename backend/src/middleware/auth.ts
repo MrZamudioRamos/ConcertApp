@@ -1,24 +1,29 @@
+import { config } from 'dotenv';
+import { resolve } from 'path';
+import { fileURLToPath } from 'url';
 import { Context, Next } from 'hono';
 import { jwtVerify } from 'jose';
+import type { AppVariables } from '../types/hono.js';
 
-const SUPABASE_JWKS = 'https://YOUR-PROJECT.supabase.co/auth/v1/jwks'; // ← cámbialo
+const __dirname = fileURLToPath(new URL('.', import.meta.url));
+config({ path: resolve(__dirname, '../../.env') });
 
-export async function authMiddleware(c: Context, next: Next) {
+export async function authMiddleware(
+  c: Context<{ Variables: AppVariables }>,
+  next: Next
+) {
   const authHeader = c.req.header('Authorization');
-  if (!authHeader?.startsWith('Bearer ')) return c.json({ error: 'No token' }, 401);
+  if (!authHeader?.startsWith('Bearer ')) {
+    return c.json({ error: 'No autorizado' }, 401);
+  }
 
   const token = authHeader.split(' ')[1];
-
   try {
-    const { payload } = await jwtVerify(
-      token,
-      new TextEncoder().encode(process.env.SUPABASE_JWT_SECRET!), // o usa JWKS para más seguridad
-      { issuer: 'https://YOUR-PROJECT.supabase.co/auth/v1' }
-    );
-
-    c.set('user', { id: payload.sub }); // supabase user id
+    const secret = new TextEncoder().encode(process.env.SUPABASE_JWT_SECRET!);
+    const { payload } = await jwtVerify(token, secret);
+    c.set('user', { id: payload.sub as string });
     await next();
-  } catch (err) {
+  } catch {
     return c.json({ error: 'Token inválido' }, 401);
   }
 }
